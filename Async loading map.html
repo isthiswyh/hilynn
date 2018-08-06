@@ -1,0 +1,71 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>异步加载地图</title>
+    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css"/>
+</head>
+<body>
+<div id="container"></div>
+<script>
+    function onApiLoaded(){
+        var map = new AMap.Map("container", {resizeEnable: true});
+        var lnglats = [
+	        [106.449715,29.581207],
+	        [106.460012,29.567237],
+	        [106.53766,29.552892],
+	        [106.299541,29.592452],
+	        [106.597179,29.555954],
+	        [106.297265,29.602448],
+	        [106.538306,29.550082],
+	        [106.581482,29.569963],
+	        [106.553813,29.561573],
+	        [106.547468,29.563194],
+	        [106.586625,29.556232],
+	        [106.577875,29.559171],
+	        [106.512762,29.536136],
+	        [106.423756,29.816263]
+        ];
+        var text = [
+	        '你说过要带我去的，等你很久了。',
+	        '我还从没来过这里，现在我有理由了。',
+	        '网红景点，还是很有意思的，鹅岭二厂一路走下来就到了。',
+	        '只在晚上来过这，我怎么没对你做些什么？万幸隔壁酒店不错。',
+	        '从长江索道下来，走到了东水门大桥这，也是唯一一次到南岸区。',
+	        '比老川美好看很多。',
+	        '鹅岭公园上面有个楼风景视野很好，顺着路就到了二厂，没想象中好玩，不如下面的李子坝有意思。',
+	        '千厮门大桥旁边，是个拍照的好地方，来福士广场、洪崖洞、千厮门大桥、两江交汇，这点很像武汉，还能看到最高的WFC。',
+	        '大礼堂外观很不错，对面是三峡博物馆，不过没进去过。',
+	        '中山四路很有民国风情，印象很深，里面有一个地理信息方面的书店，都是专业书籍，有一种突然找到黄金屋的感觉。路的尽头下去就是曾家岩，顺着出口就到了大礼堂。',
+	        '长江索道坐过一次，排了一个多小时队，好在票价不贵。',
+	        'WFC应该是渝中半岛最高的地方，楼顶观景台真的很值得一去，下次一定晚上带你去。旁边是国泰艺术中心，外观很有意思。',
+	        '强烈推荐旁边地铁站里的糖葫芦，和B栋一家店的玫瑰糯米冰粉。',
+	        '天生轻轨站祝凯琳20岁生日快乐！你要做一个大人了，不准情绪化，不准偷偷想念，你要听话。'
+        ]
+        var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+        for (var i = 0, marker; i < lnglats.length; i++) {
+            var marker = new AMap.Marker({
+                position: lnglats[i],
+                map: map
+            });
+            marker.content = text[i];
+            marker.on('click', markerClick);
+            marker.emit('click', {target: marker});
+        }
+        function markerClick(e) {
+            infoWindow.setContent(e.target.content);
+            infoWindow.open(map, e.target.getPosition());
+        }
+        map.setFitView();
+        map.setMapStyle('amap://styles/whitesmoke');
+    }
+    var url = 'https://webapi.amap.com/maps?v=1.4.8&key=1dbe2b1220013f174b4429b2e25ee3ff&callback=onApiLoaded';
+    var jsapi = document.createElement('script');
+    jsapi.charset = 'utf-8';
+    jsapi.src = url;
+    document.head.appendChild(jsapi);
+</script>
+</body>
+</html>
